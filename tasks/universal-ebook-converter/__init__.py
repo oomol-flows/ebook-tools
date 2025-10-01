@@ -2,17 +2,16 @@
 import typing
 class Inputs(typing.TypedDict):
     input_file: str
-    output_format: str
+    output_format: typing.Literal["epub", "mobi", "azw3", "pdf", "txt", "html"]
     output_path: str
-    quality: str
+    quality: typing.Literal["low", "medium", "high", "best"]
     preserve_metadata: bool
-    target_device: str
-    custom_options: typing.Union[str, None]
-
+    target_device: typing.Literal["generic", "kindle", "kindle_paperwhite", "ipad", "kobo", "nook"]
+    custom_options: str | None
 class Outputs(typing.TypedDict):
-    output_file: str
-    conversion_log: str
-    file_info: dict
+    output_file: typing.NotRequired[str]
+    conversion_log: typing.NotRequired[str]
+    file_info: typing.NotRequired[dict]
 #endregion
 
 from oocana import Context
@@ -81,7 +80,7 @@ def main(params: Inputs, context: Context) -> Outputs:
     device_profiles = {
         "generic": "generic_eink",
         "kindle": "kindle",
-        "kindle_paperwhite": "kindle_paperwhite",
+        "kindle_paperwhite": "kindle_pw",
         "ipad": "ipad",
         "kobo": "kobo",
         "nook": "nook"
@@ -90,11 +89,10 @@ def main(params: Inputs, context: Context) -> Outputs:
 
     # Quality settings based on input and output formats
     quality_settings = {
-        "low": ["--max-levels", "1"],
-        "medium": ["--max-levels", "2", "--pretty-print"],
-        "high": ["--max-levels", "5", "--pretty-print", "--linearize-tables"],
+        "low": [],
+        "medium": ["--pretty-print"],
+        "high": ["--pretty-print", "--linearize-tables"],
         "best": [
-            "--max-levels", "5",
             "--pretty-print",
             "--linearize-tables",
             "--enable-heuristics",
@@ -111,21 +109,17 @@ def main(params: Inputs, context: Context) -> Outputs:
 
     elif output_format == "epub":
         cmd.extend([
-            "--fix-indents",
             "--remove-paragraph-spacing",
             "--insert-blank-line"
         ])
 
     elif output_format == "pdf":
-        cmd.extend([
-            "--pdf-page-numbers",
-            "--pdf-add-toc",
-            "--paper-size", "a4"
-        ])
+        # PDF specific options - using simpler approach
+        cmd.extend(["--paper-size", "a4"])
 
     # Preserve metadata option
     if preserve_metadata:
-        cmd.extend(["--preserve-cover-aspect-ratio"])
+        cmd.extend(["--prefer-metadata-cover"])
 
     # Add custom options if provided
     if custom_options and custom_options.strip():

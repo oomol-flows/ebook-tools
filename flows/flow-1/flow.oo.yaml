@@ -4,7 +4,7 @@ nodes:
     task: self::universal-ebook-converter
     inputs_from:
       - handle: input_file
-        value: "/oomol-driver/oomol-storage/sample.epub"
+        value: /oomol-driver/oomol-storage/epub/《明朝那些事儿》.epub
       - handle: output_format
         value: "mobi"
       - handle: output_path
@@ -15,3 +15,5 @@ nodes:
         value: true
       - handle: target_device
         value: "kindle_paperwhite"
+      - handle: custom_options
+        value:

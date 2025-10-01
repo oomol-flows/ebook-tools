@@ -3,12 +3,11 @@ import typing
 class Inputs(typing.TypedDict):
     input_epub: str
     output_path: str
-    quality: str
+    quality: typing.Literal["low", "medium", "high", "best"]
     preserve_metadata: bool
-
 class Outputs(typing.TypedDict):
-    output_file: str
-    conversion_log: str
+    output_file: typing.NotRequired[str]
+    conversion_log: typing.NotRequired[str]
 #endregion
 
 from oocana import Context

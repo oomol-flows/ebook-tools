@@ -1,10 +1,14 @@
 version: 0.0.1
 scripts:
   # Script executed when the container is first loaded
-  # Install calibre for ebook conversion
+  # eg: bootstrap: poetry add pandas
   bootstrap: |
-    apt-get update
-    apt-get install -y calibre
+    apt-get update && apt-get install -y calibre
     npm install
-    poetry add pathlib subprocess-run
     poetry install --no-root
+name: ebook-tools
+repository: https://github.com/oomol-flows/ebook-tools
+releaseNotes: init
+displayName: "%e-book-tools%"
+icon: ./icon.png
+description: "%epub-mobi-azw3-pdf-calibre%"

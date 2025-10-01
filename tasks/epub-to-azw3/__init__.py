@@ -3,13 +3,12 @@ import typing
 class Inputs(typing.TypedDict):
     input_epub: str
     output_path: str
-    quality: str
+    quality: typing.Literal["low", "medium", "high", "best"]
     preserve_metadata: bool
-    kindle_device: str
-
+    kindle_device: typing.Literal["kindle", "kindle_dx", "kindle_fire", "kindle_paperwhite", "kindle_oasis"]
 class Outputs(typing.TypedDict):
-    output_file: str
-    conversion_log: str
+    output_file: typing.NotRequired[str]
+    conversion_log: typing.NotRequired[str]
 #endregion
 
 from oocana import Context

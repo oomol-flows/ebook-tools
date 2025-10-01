@@ -3,14 +3,13 @@ import typing
 class Inputs(typing.TypedDict):
     input_azw3: str
     output_path: str
-    quality: str
+    quality: typing.Literal["low", "medium", "high", "best"]
     preserve_metadata: bool
     fix_drm_protected: bool
     clean_formatting: bool
-
 class Outputs(typing.TypedDict):
-    output_file: str
-    conversion_log: str
+    output_file: typing.NotRequired[str]
+    conversion_log: typing.NotRequired[str]
 #endregion
 
 from oocana import Context
