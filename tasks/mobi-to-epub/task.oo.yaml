@@ -1,0 +1,75 @@
+inputs_def:
+  - handle: input_mobi
+    description: Input MOBI/AZW file to convert
+    json_schema:
+      type: string
+      ui:widget: file
+      ui:options:
+        filters:
+          - name: MOBI Files
+            extensions:
+              - mobi
+              - azw
+              - prc
+        accept: .mobi,.azw,.prc
+    nullable: false
+
+  - handle: output_path
+    description: Output path for converted EPUB file
+    json_schema:
+      type: string
+      ui:widget: save
+      ui:options:
+        filters:
+          - name: EPUB Files
+            extensions:
+              - epub
+        excludeAll: true
+    nullable: false
+
+  - handle: quality
+    description: Conversion quality setting
+    json_schema:
+      type: string
+      enum:
+        - low
+        - medium
+        - high
+        - best
+      default: medium
+    nullable: false
+
+  - handle: preserve_metadata
+    description: Preserve original metadata during conversion
+    json_schema:
+      type: boolean
+      default: true
+    nullable: false
+
+  - handle: fix_formatting
+    description: Apply formatting fixes for better EPUB compatibility
+    json_schema:
+      type: boolean
+      default: true
+    nullable: false
+
+outputs_def:
+  - handle: output_file
+    description: "Path to the converted EPUB file"
+    json_schema:
+      type: string
+
+  - handle: conversion_log
+    description: "Conversion process log and status"
+    json_schema:
+      type: string
+
+executor:
+  name: python
+  options:
+    entry: __init__.py
+    spawn: false
+
+title: "MOBI to EPUB Converter"
+icon: ":carbon:book:"
+description: "Convert MOBI/AZW ebook files to EPUB format using Calibre"

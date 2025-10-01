@@ -1,0 +1,66 @@
+inputs_def:
+  - handle: input_epub
+    json_schema:
+      type: string
+      ui:widget: file
+      ui:options:
+        filters:
+          - name: EPUB Files
+            extensions:
+              - epub
+        accept: ".epub"
+    description: "Input EPUB file to convert"
+    nullable: false
+
+  - handle: output_path
+    json_schema:
+      type: string
+      ui:widget: save
+      ui:options:
+        filters:
+          - name: MOBI Files
+            extensions:
+              - mobi
+        excludeAll: true
+    description: "Output path for converted MOBI file"
+    nullable: false
+
+  - handle: quality
+    json_schema:
+      type: string
+      enum:
+        - "low"
+        - "medium"
+        - "high"
+        - "best"
+      default: "medium"
+    description: "Conversion quality setting"
+    nullable: false
+
+  - handle: preserve_metadata
+    json_schema:
+      type: boolean
+      default: true
+    description: "Preserve original metadata during conversion"
+    nullable: false
+
+outputs_def:
+  - handle: output_file
+    description: "Path to the converted MOBI file"
+    json_schema:
+      type: string
+
+  - handle: conversion_log
+    description: "Conversion process log and status"
+    json_schema:
+      type: string
+
+executor:
+  name: python
+  options:
+    entry: __init__.py
+    spawn: false
+
+title: "EPUB to MOBI Converter"
+icon: ":carbon:book:"
+description: "Convert EPUB ebook files to MOBI format using Calibre"

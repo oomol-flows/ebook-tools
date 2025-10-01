@@ -1,0 +1,17 @@
+title: "Ebook Format Conversion Test Flow"
+nodes:
+  - node_id: universal_converter#1
+    task: self::universal-ebook-converter
+    inputs_from:
+      - handle: input_file
+        value: "/oomol-driver/oomol-storage/sample.epub"
+      - handle: output_format
+        value: "mobi"
+      - handle: output_path
+        value: "/oomol-driver/oomol-storage/converted.mobi"
+      - handle: quality
+        value: "high"
+      - handle: preserve_metadata
+        value: true
+      - handle: target_device
+        value: "kindle_paperwhite"

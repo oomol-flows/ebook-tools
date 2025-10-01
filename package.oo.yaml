@@ -1,0 +1,10 @@
+version: 0.0.1
+scripts:
+  # Script executed when the container is first loaded
+  # Install calibre for ebook conversion
+  bootstrap: |
+    apt-get update
+    apt-get install -y calibre
+    npm install
+    poetry add pathlib subprocess-run
+    poetry install --no-root

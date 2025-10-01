@@ -1,0 +1,109 @@
+inputs_def:
+  - handle: input_file
+    json_schema:
+      type: string
+      ui:widget: file
+      ui:options:
+        filters:
+          - name: Ebook Files
+            extensions:
+              - epub
+              - mobi
+              - azw
+              - azw3
+              - pdf
+              - txt
+              - html
+              - fb2
+              - rtf
+        accept: ".epub,.mobi,.azw,.azw3,.pdf,.txt,.html,.fb2,.rtf"
+    description: "Input ebook file to convert"
+    nullable: false
+
+  - handle: output_format
+    json_schema:
+      type: string
+      enum:
+        - "epub"
+        - "mobi"
+        - "azw3"
+        - "pdf"
+        - "txt"
+        - "html"
+      default: "epub"
+    description: "Target output format"
+    nullable: false
+
+  - handle: output_path
+    json_schema:
+      type: string
+      ui:widget: save
+    description: "Output path for converted file"
+    nullable: false
+
+  - handle: quality
+    json_schema:
+      type: string
+      enum:
+        - "low"
+        - "medium"
+        - "high"
+        - "best"
+      default: "high"
+    description: "Conversion quality setting"
+    nullable: false
+
+  - handle: preserve_metadata
+    json_schema:
+      type: boolean
+      default: true
+    description: "Preserve original metadata during conversion"
+    nullable: false
+
+  - handle: target_device
+    json_schema:
+      type: string
+      enum:
+        - "generic"
+        - "kindle"
+        - "kindle_paperwhite"
+        - "ipad"
+        - "kobo"
+        - "nook"
+      default: "generic"
+    description: "Target reading device for optimization"
+    nullable: false
+
+  - handle: custom_options
+    json_schema:
+      type: string
+      default: ""
+    description: "Additional custom Calibre options (advanced users)"
+    nullable: true
+
+outputs_def:
+  - handle: output_file
+    description: "Path to the converted file"
+    json_schema:
+      type: string
+
+  - handle: conversion_log
+    description: "Detailed conversion process log and status"
+    json_schema:
+      type: string
+
+  - handle: file_info
+    description: "Information about input and output files"
+    json_schema:
+      type: object
+
+executor:
+  name: python
+  options:
+    entry: __init__.py
+    spawn: false
+
+title: "Universal Ebook Converter"
+icon: ":carbon:book:"
+description: "Universal ebook format converter supporting EPUB, MOBI, AZW3, PDF
+  and more using Calibre"
