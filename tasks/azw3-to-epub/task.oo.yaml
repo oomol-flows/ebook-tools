@@ -1,5 +1,6 @@
 inputs_def:
   - handle: input_azw3
+    description: "%input-azw3-azw-file-to-convert%"
     json_schema:
       type: string
       ui:widget: file
@@ -9,11 +10,11 @@ inputs_def:
             extensions:
               - azw3
               - azw
-        accept: ".azw3,.azw"
-    description: "Input AZW3/AZW file to convert"
+        accept: .azw3,.azw
     nullable: false
 
   - handle: output_path
+    description: "%output-path-for-converted-epub-file%"
     json_schema:
       type: string
       ui:widget: save
@@ -23,40 +24,39 @@ inputs_def:
             extensions:
               - epub
         excludeAll: true
-    description: "Output path for converted EPUB file"
     nullable: false
 
   - handle: quality
+    description: "%conversion-quality-setting%"
     json_schema:
       type: string
       enum:
-        - "low"
-        - "medium"
-        - "high"
-        - "best"
-      default: "high"
-    description: "Conversion quality setting"
+        - low
+        - medium
+        - high
+        - best
+      default: high
     nullable: false
 
   - handle: preserve_metadata
+    description: "%preserve-original-metadata-during-conversion%"
     json_schema:
       type: boolean
       default: true
-    description: "Preserve original metadata during conversion"
     nullable: false
 
   - handle: fix_drm_protected
+    description: "%attempt-to-process-drm-protected-files-may-fail-for-protected-co%"
     json_schema:
       type: boolean
       default: false
-    description: "Attempt to process DRM-protected files (may fail for protected content)"
     nullable: false
 
   - handle: clean_formatting
+    description: "%clean-and-optimize-formatting-for-epub%"
     json_schema:
       type: boolean
       default: true
-    description: "Clean and optimize formatting for EPUB"
     nullable: false
 
 outputs_def:
@@ -76,6 +76,6 @@ executor:
     entry: __init__.py
     spawn: false
 
-title: "AZW3 to EPUB Converter"
+title: "%azw3-to-epub-converter%"
 icon: ":carbon:book:"
-description: "Convert AZW3/AZW ebook files to EPUB format using Calibre"
+description: "%convert-azw3-azw-ebook-files-to-epub-format-using-calibre%"

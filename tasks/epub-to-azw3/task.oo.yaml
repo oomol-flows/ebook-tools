@@ -1,5 +1,6 @@
 inputs_def:
   - handle: input_epub
+    description: "%input-epub-file-to-convert%"
     json_schema:
       type: string
       ui:widget: file
@@ -8,11 +9,11 @@ inputs_def:
           - name: EPUB Files
             extensions:
               - epub
-        accept: ".epub"
-    description: "Input EPUB file to convert"
+        accept: .epub
     nullable: false
 
   - handle: output_path
+    description: "%output-path-for-converted-azw3-file%"
     json_schema:
       type: string
       ui:widget: save
@@ -22,39 +23,38 @@ inputs_def:
             extensions:
               - azw3
         excludeAll: true
-    description: "Output path for converted AZW3 file"
     nullable: false
 
   - handle: quality
+    description: "%conversion-quality-setting2%"
     json_schema:
       type: string
       enum:
-        - "low"
-        - "medium"
-        - "high"
-        - "best"
-      default: "high"
-    description: "Conversion quality setting"
+        - low
+        - medium
+        - high
+        - best
+      default: high
     nullable: false
 
   - handle: preserve_metadata
+    description: "%preserve-original-metadata-during-conversion2%"
     json_schema:
       type: boolean
       default: true
-    description: "Preserve original metadata during conversion"
     nullable: false
 
   - handle: kindle_device
+    description: "%target-kindle-device-for-optimization%"
     json_schema:
       type: string
       enum:
-        - "kindle"
-        - "kindle_dx"
-        - "kindle_fire"
-        - "kindle_paperwhite"
-        - "kindle_oasis"
-      default: "kindle_paperwhite"
-    description: "Target Kindle device for optimization"
+        - kindle
+        - kindle_dx
+        - kindle_fire
+        - kindle_paperwhite
+        - kindle_oasis
+      default: kindle_paperwhite
     nullable: false
 
 outputs_def:
@@ -74,7 +74,6 @@ executor:
     entry: __init__.py
     spawn: false
 
-title: "EPUB to AZW3 Converter"
+title: "%epub-to-azw3-converter%"
 icon: ":carbon:book:"
-description: "Convert EPUB ebook files to AZW3 format optimized for Kindle
-  devices using Calibre"
+description: "%convert-epub-ebook-files-to-azw3-format-optimized-for-kindle-dev%"

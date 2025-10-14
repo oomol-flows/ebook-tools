@@ -1,4 +1,4 @@
-title: "Ebook Format Conversion Test Flow"
+title: "%ebook-format-conversion-test-flow%"
 nodes:
   - node_id: universal_converter#1
     task: self::universal-ebook-converter

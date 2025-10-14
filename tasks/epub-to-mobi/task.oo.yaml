@@ -1,5 +1,6 @@
 inputs_def:
   - handle: input_epub
+    description: "%input-epub-file-to-convert2%"
     json_schema:
       type: string
       ui:widget: file
@@ -8,11 +9,11 @@ inputs_def:
           - name: EPUB Files
             extensions:
               - epub
-        accept: ".epub"
-    description: "Input EPUB file to convert"
+        accept: .epub
     nullable: false
 
   - handle: output_path
+    description: "%output-path-for-converted-mobi-file%"
     json_schema:
       type: string
       ui:widget: save
@@ -22,26 +23,25 @@ inputs_def:
             extensions:
               - mobi
         excludeAll: true
-    description: "Output path for converted MOBI file"
     nullable: false
 
   - handle: quality
+    description: "%conversion-quality-setting3%"
     json_schema:
       type: string
       enum:
-        - "low"
-        - "medium"
-        - "high"
-        - "best"
-      default: "medium"
-    description: "Conversion quality setting"
+        - low
+        - medium
+        - high
+        - best
+      default: medium
     nullable: false
 
   - handle: preserve_metadata
+    description: "%preserve-original-metadata-during-conversion3%"
     json_schema:
       type: boolean
       default: true
-    description: "Preserve original metadata during conversion"
     nullable: false
 
 outputs_def:
@@ -61,6 +61,6 @@ executor:
     entry: __init__.py
     spawn: false
 
-title: "EPUB to MOBI Converter"
+title: "%epub-to-mobi-converter%"
 icon: ":carbon:book:"
-description: "Convert EPUB ebook files to MOBI format using Calibre"
+description: "%convert-epub-ebook-files-to-mobi-format-using-calibre%"

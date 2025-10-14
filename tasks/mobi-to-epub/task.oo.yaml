@@ -1,6 +1,6 @@
 inputs_def:
   - handle: input_mobi
-    description: Input MOBI/AZW file to convert
+    description: "%input-mobi-azw-file-to-convert%"
     json_schema:
       type: string
       ui:widget: file
@@ -15,7 +15,7 @@ inputs_def:
     nullable: false
 
   - handle: output_path
-    description: Output path for converted EPUB file
+    description: "%output-path-for-converted-epub-file2%"
     json_schema:
       type: string
       ui:widget: save
@@ -28,7 +28,7 @@ inputs_def:
     nullable: false
 
   - handle: quality
-    description: Conversion quality setting
+    description: "%conversion-quality-setting4%"
     json_schema:
       type: string
       enum:
@@ -40,14 +40,14 @@ inputs_def:
     nullable: false
 
   - handle: preserve_metadata
-    description: Preserve original metadata during conversion
+    description: "%preserve-original-metadata-during-conversion4%"
     json_schema:
       type: boolean
       default: true
     nullable: false
 
   - handle: fix_formatting
-    description: Apply formatting fixes for better EPUB compatibility
+    description: "%apply-formatting-fixes-for-better-epub-compatibility%"
     json_schema:
       type: boolean
       default: true
@@ -70,6 +70,6 @@ executor:
     entry: __init__.py
     spawn: false
 
-title: "MOBI to EPUB Converter"
+title: "%mobi-to-epub-converter%"
 icon: ":carbon:book:"
-description: "Convert MOBI/AZW ebook files to EPUB format using Calibre"
+description: "%convert-mobi-azw-ebook-files-to-epub-format-using-calibre%"

@@ -1,5 +1,6 @@
 inputs_def:
   - handle: input_file
+    description: "%input-ebook-file-to-convert%"
     json_schema:
       type: string
       ui:widget: file
@@ -16,69 +17,68 @@ inputs_def:
               - html
               - fb2
               - rtf
-        accept: ".epub,.mobi,.azw,.azw3,.pdf,.txt,.html,.fb2,.rtf"
-    description: "Input ebook file to convert"
+        accept: .epub,.mobi,.azw,.azw3,.pdf,.txt,.html,.fb2,.rtf
     nullable: false
 
   - handle: output_format
+    description: "%target-output-format%"
     json_schema:
       type: string
       enum:
-        - "epub"
-        - "mobi"
-        - "azw3"
-        - "pdf"
-        - "txt"
-        - "html"
-      default: "epub"
-    description: "Target output format"
+        - epub
+        - mobi
+        - azw3
+        - pdf
+        - txt
+        - html
+      default: epub
     nullable: false
 
   - handle: output_path
+    description: "%output-path-for-converted-file%"
     json_schema:
       type: string
       ui:widget: save
-    description: "Output path for converted file"
     nullable: false
 
   - handle: quality
+    description: "%conversion-quality-setting5%"
     json_schema:
       type: string
       enum:
-        - "low"
-        - "medium"
-        - "high"
-        - "best"
-      default: "high"
-    description: "Conversion quality setting"
+        - low
+        - medium
+        - high
+        - best
+      default: high
     nullable: false
 
   - handle: preserve_metadata
+    description: "%preserve-original-metadata-during-conversion5%"
     json_schema:
       type: boolean
       default: true
-    description: "Preserve original metadata during conversion"
     nullable: false
 
   - handle: target_device
+    description: "%target-reading-device-for-optimization%"
     json_schema:
       type: string
       enum:
-        - "generic"
-        - "kindle"
-        - "kindle_paperwhite"
-        - "ipad"
-        - "kobo"
-        - "nook"
-      default: "generic"
-    description: "Target reading device for optimization"
+        - generic
+        - kindle
+        - kindle_paperwhite
+        - ipad
+        - kobo
+        - nook
+      default: generic
     nullable: false
 
   - handle: custom_options
+    description: "%additional-custom-calibre-options-advanced-users%"
     json_schema:
       type: string
       default: ""
-    description: "Additional custom Calibre options (advanced users)"
     nullable: true
 
 outputs_def:
@@ -103,7 +103,6 @@ executor:
     entry: __init__.py
     spawn: false
 
-title: "Universal Ebook Converter"
+title: "%universal-ebook-converter%"
 icon: ":carbon:book:"
-description: "Universal ebook format converter supporting EPUB, MOBI, AZW3, PDF
-  and more using Calibre"
+description: "%universal-ebook-format-converter-supporting-epub-mobi-azw3-pdf-a%"
