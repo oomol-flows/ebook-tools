@@ -12,6 +12,9 @@ inputs_def:
         accept: .epub
     nullable: false
 
+  - group: Output Options
+    collapsed: true
+
   - handle: output_path
     description: "%output-path-for-converted-azw3-file%"
     json_schema:
@@ -23,7 +26,10 @@ inputs_def:
             extensions:
               - azw3
         excludeAll: true
-    nullable: false
+    nullable: true
+
+  - group: Advanced Options
+    collapsed: true
 
   - handle: quality
     description: "%conversion-quality-setting2%"
@@ -34,15 +40,15 @@ inputs_def:
         - medium
         - high
         - best
-      default: high
-    nullable: false
+    value: null
+    nullable: true
 
   - handle: preserve_metadata
     description: "%preserve-original-metadata-during-conversion2%"
     json_schema:
       type: boolean
-      default: true
-    nullable: false
+    value: null
+    nullable: true
 
   - handle: kindle_device
     description: "%target-kindle-device-for-optimization%"
@@ -54,19 +60,15 @@ inputs_def:
         - kindle_fire
         - kindle_paperwhite
         - kindle_oasis
-      default: kindle_paperwhite
-    nullable: false
+    value: null
+    nullable: true
 
 outputs_def:
   - handle: output_file
     description: "Path to the converted AZW3 file"
     json_schema:
       type: string
-
-  - handle: conversion_log
-    description: "Conversion process log and status"
-    json_schema:
-      type: string
+      ui:widget: file
 
 executor:
   name: python

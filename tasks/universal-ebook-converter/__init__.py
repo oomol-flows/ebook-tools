@@ -2,39 +2,20 @@
 import typing
 class Inputs(typing.TypedDict):
     input_file: str
-    output_format: typing.Literal["epub", "mobi", "azw3", "pdf", "txt", "html"]
-    output_path: str
-    quality: typing.Literal["low", "medium", "high", "best"]
-    preserve_metadata: bool
-    target_device: typing.Literal["generic", "kindle", "kindle_paperwhite", "ipad", "kobo", "nook"]
+    output_format: typing.Literal["epub", "mobi", "azw3", "pdf", "txt", "html"] | None
+    output_path: str | None
+    quality: typing.Literal["low", "medium", "high", "best"] | None
+    preserve_metadata: bool | None
+    target_device: typing.Literal["generic", "kindle", "kindle_paperwhite", "ipad", "kobo", "nook"] | None
     custom_options: str | None
 class Outputs(typing.TypedDict):
     output_file: typing.NotRequired[str]
-    conversion_log: typing.NotRequired[str]
-    file_info: typing.NotRequired[dict]
 #endregion
 
 from oocana import Context
 import subprocess
 import os
-import mimetypes
 from pathlib import Path
-
-def get_file_info(file_path: str) -> dict:
-    """Get basic information about a file"""
-    if not os.path.exists(file_path):
-        return {}
-
-    stat = os.stat(file_path)
-    mime_type, _ = mimetypes.guess_type(file_path)
-
-    return {
-        "filename": os.path.basename(file_path),
-        "size": stat.st_size,
-        "size_mb": round(stat.st_size / (1024 * 1024), 2),
-        "extension": Path(file_path).suffix.lower(),
-        "mime_type": mime_type
-    }
 
 def main(params: Inputs, context: Context) -> Outputs:
     """
@@ -45,33 +26,40 @@ def main(params: Inputs, context: Context) -> Outputs:
         context: OOMOL context object
 
     Returns:
-        Output dictionary with converted file path, log, and file information
+        Output dictionary with converted file path
     """
 
     input_file = params["input_file"]
-    output_format = params["output_format"]
-    output_path = params["output_path"]
-    quality = params["quality"]
-    preserve_metadata = params["preserve_metadata"]
-    target_device = params["target_device"]
-    custom_options = params.get("custom_options", "")
+    output_format = params.get("output_format") or "epub"  # Recommended default
+    quality = params.get("quality") or "high"  # Recommended default
+    preserve_metadata = params.get("preserve_metadata")
+    if preserve_metadata is None:
+        preserve_metadata = True  # Recommended default
+    target_device = params.get("target_device") or "generic"  # Recommended default
+    custom_options = params.get("custom_options") or ""
 
     # Validate input file exists
     if not os.path.exists(input_file):
         raise ValueError(f"Input file does not exist: {input_file}")
 
-    # Get input file info
-    input_info = get_file_info(input_file)
+    # Get input format
     input_format = Path(input_file).suffix.lower().replace(".", "")
+
+    # Handle output path - use session_dir with source filename if null
+    output_path = params.get("output_path")
+    if output_path is None:
+        input_path = Path(input_file)
+        output_filename = input_path.stem + f".{output_format}"
+        output_path = os.path.join(context.session_dir, output_filename)
+    else:
+        # Ensure output path has correct extension if user provided path
+        if not output_path.lower().endswith(f".{output_format}"):
+            output_path = f"{output_path}.{output_format}" if not Path(output_path).suffix else output_path
 
     # Ensure output directory exists
     output_dir = os.path.dirname(output_path)
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
-
-    # Ensure output path has correct extension
-    if not output_path.lower().endswith(f".{output_format}"):
-        output_path = f"{output_path}.{output_format}" if not Path(output_path).suffix else output_path
 
     # Build calibre conversion command
     cmd = ["ebook-convert", input_file, output_path]
@@ -126,15 +114,6 @@ def main(params: Inputs, context: Context) -> Outputs:
         custom_args = custom_options.strip().split()
         cmd.extend(custom_args)
 
-    log_messages = []
-    log_messages.append(f"Converting {input_file} ({input_format.upper()}) to {output_path} ({output_format.upper()})")
-    log_messages.append(f"Input file size: {input_info.get('size_mb', 0)} MB")
-    log_messages.append(f"Quality setting: {quality}")
-    log_messages.append(f"Target device: {target_device}")
-    log_messages.append(f"Preserve metadata: {preserve_metadata}")
-    if custom_options:
-        log_messages.append(f"Custom options: {custom_options}")
-
     try:
         # Execute conversion
         result = subprocess.run(
@@ -144,35 +123,11 @@ def main(params: Inputs, context: Context) -> Outputs:
             check=True
         )
 
-        log_messages.append("Conversion completed successfully")
-        if result.stdout:
-            log_messages.append(f"Calibre output: {result.stdout}")
-
         # Verify output file was created
         if not os.path.exists(output_path):
             raise ValueError("Conversion failed: Output file was not created")
 
-        # Get output file info
-        output_info = get_file_info(output_path)
-        log_messages.append(f"Output file size: {output_info.get('size_mb', 0)} MB")
-
-        file_info = {
-            "input": input_info,
-            "output": output_info,
-            "conversion": {
-                "from_format": input_format,
-                "to_format": output_format,
-                "quality": quality,
-                "device": target_device,
-                "size_change_mb": round(output_info.get('size_mb', 0) - input_info.get('size_mb', 0), 2)
-            }
-        }
-
-        return {
-            "output_file": output_path,
-            "conversion_log": "\n".join(log_messages),
-            "file_info": file_info
-        }
+        return {"output_file": output_path}
 
     except subprocess.CalledProcessError as e:
         error_msg = f"Conversion failed: {e.stderr}" if e.stderr else str(e)
@@ -185,9 +140,7 @@ def main(params: Inputs, context: Context) -> Outputs:
         elif input_format == output_format:
             error_msg += f"\nNote: Input and output formats are the same ({input_format}). No conversion needed."
 
-        log_messages.append(f"Error: {error_msg}")
-        raise ValueError("\n".join(log_messages))
+        raise ValueError(error_msg)
 
     except Exception as e:
-        log_messages.append(f"Unexpected error: {str(e)}")
-        raise ValueError("\n".join(log_messages))
+        raise ValueError(f"Unexpected error: {str(e)}")

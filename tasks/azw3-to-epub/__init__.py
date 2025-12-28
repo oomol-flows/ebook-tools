@@ -2,14 +2,13 @@
 import typing
 class Inputs(typing.TypedDict):
     input_azw3: str
-    output_path: str
-    quality: typing.Literal["low", "medium", "high", "best"]
-    preserve_metadata: bool
-    fix_drm_protected: bool
-    clean_formatting: bool
+    output_path: str | None
+    quality: typing.Literal["low", "medium", "high", "best"] | None
+    preserve_metadata: bool | None
+    fix_drm_protected: bool | None
+    clean_formatting: bool | None
 class Outputs(typing.TypedDict):
     output_file: typing.NotRequired[str]
-    conversion_log: typing.NotRequired[str]
 #endregion
 
 from oocana import Context
@@ -26,19 +25,31 @@ def main(params: Inputs, context: Context) -> Outputs:
         context: OOMOL context object
 
     Returns:
-        Output dictionary with converted file path and conversion log
+        Output dictionary with converted file path
     """
 
     input_file = params["input_azw3"]
-    output_file = params["output_path"]
-    quality = params["quality"]
-    preserve_metadata = params["preserve_metadata"]
-    fix_drm_protected = params["fix_drm_protected"]
-    clean_formatting = params["clean_formatting"]
+    quality = params.get("quality") or "high"  # Recommended default
+    preserve_metadata = params.get("preserve_metadata")
+    if preserve_metadata is None:
+        preserve_metadata = True  # Recommended default
+    fix_drm_protected = params.get("fix_drm_protected")
+    if fix_drm_protected is None:
+        fix_drm_protected = False  # Recommended default
+    clean_formatting = params.get("clean_formatting")
+    if clean_formatting is None:
+        clean_formatting = True  # Recommended default
 
     # Validate input file exists
     if not os.path.exists(input_file):
         raise ValueError(f"Input AZW3 file does not exist: {input_file}")
+
+    # Handle output path - use session_dir with source filename if null
+    output_file = params.get("output_path")
+    if output_file is None:
+        input_path = Path(input_file)
+        output_filename = input_path.stem + ".epub"
+        output_file = os.path.join(context.session_dir, output_filename)
 
     # Ensure output directory exists
     output_dir = os.path.dirname(output_file)
@@ -81,16 +92,6 @@ def main(params: Inputs, context: Context) -> Outputs:
             "--html-unwrap-factor", "0.4"
         ])
 
-    log_messages = []
-    log_messages.append(f"Converting {input_file} to {output_file}")
-    log_messages.append(f"Quality setting: {quality}")
-    log_messages.append(f"Preserve metadata: {preserve_metadata}")
-    log_messages.append(f"Process DRM-protected: {fix_drm_protected}")
-    log_messages.append(f"Clean formatting: {clean_formatting}")
-
-    if fix_drm_protected:
-        log_messages.append("Warning: DRM-protected files may not convert successfully")
-
     try:
         # Execute conversion
         result = subprocess.run(
@@ -100,21 +101,11 @@ def main(params: Inputs, context: Context) -> Outputs:
             check=True
         )
 
-        log_messages.append("Conversion completed successfully")
-        if result.stdout:
-            log_messages.append(f"Calibre output: {result.stdout}")
-
         # Verify output file was created
         if not os.path.exists(output_file):
             raise ValueError("Conversion failed: Output file was not created")
 
-        file_size = os.path.getsize(output_file)
-        log_messages.append(f"Output file size: {file_size} bytes")
-
-        return {
-            "output_file": output_file,
-            "conversion_log": "\n".join(log_messages)
-        }
+        return {"output_file": output_file}
 
     except subprocess.CalledProcessError as e:
         error_msg = f"Conversion failed: {e.stderr}" if e.stderr else str(e)
@@ -123,9 +114,7 @@ def main(params: Inputs, context: Context) -> Outputs:
         if "DRM" in error_msg.upper() or "ENCRYPTION" in error_msg.upper():
             error_msg += "\nNote: This file may be DRM-protected. DRM-protected files cannot be converted."
 
-        log_messages.append(f"Error: {error_msg}")
-        raise ValueError("\n".join(log_messages))
+        raise ValueError(error_msg)
 
     except Exception as e:
-        log_messages.append(f"Unexpected error: {str(e)}")
-        raise ValueError("\n".join(log_messages))
+        raise ValueError(f"Unexpected error: {str(e)}")

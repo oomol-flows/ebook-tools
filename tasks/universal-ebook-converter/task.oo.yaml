@@ -31,15 +31,21 @@ inputs_def:
         - pdf
         - txt
         - html
-      default: epub
-    nullable: false
+    value:
+    nullable: true
+
+  - group: Output Options
+    collapsed: true
 
   - handle: output_path
     description: "%output-path-for-converted-file%"
     json_schema:
       type: string
       ui:widget: save
-    nullable: false
+    nullable: true
+
+  - group: Advanced Options
+    collapsed: true
 
   - handle: quality
     description: "%conversion-quality-setting5%"
@@ -50,15 +56,15 @@ inputs_def:
         - medium
         - high
         - best
-      default: high
-    nullable: false
+    value:
+    nullable: true
 
   - handle: preserve_metadata
     description: "%preserve-original-metadata-during-conversion5%"
     json_schema:
       type: boolean
-      default: true
-    nullable: false
+    value:
+    nullable: true
 
   - handle: target_device
     description: "%target-reading-device-for-optimization%"
@@ -71,14 +77,14 @@ inputs_def:
         - ipad
         - kobo
         - nook
-      default: generic
-    nullable: false
+    value:
+    nullable: true
 
   - handle: custom_options
     description: "%additional-custom-calibre-options-advanced-users%"
     json_schema:
       type: string
-      default: ""
+    value:
     nullable: true
 
 outputs_def:
@@ -86,16 +92,7 @@ outputs_def:
     description: "Path to the converted file"
     json_schema:
       type: string
-
-  - handle: conversion_log
-    description: "Detailed conversion process log and status"
-    json_schema:
-      type: string
-
-  - handle: file_info
-    description: "Information about input and output files"
-    json_schema:
-      type: object
+      ui:widget: file
 
 executor:
   name: python

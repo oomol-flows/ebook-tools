@@ -13,6 +13,9 @@ inputs_def:
         accept: .azw3,.azw
     nullable: false
 
+  - group: Output Options
+    collapsed: true
+
   - handle: output_path
     description: "%output-path-for-converted-epub-file%"
     json_schema:
@@ -24,7 +27,10 @@ inputs_def:
             extensions:
               - epub
         excludeAll: true
-    nullable: false
+    nullable: true
+
+  - group: Advanced Options
+    collapsed: true
 
   - handle: quality
     description: "%conversion-quality-setting%"
@@ -35,40 +41,36 @@ inputs_def:
         - medium
         - high
         - best
-      default: high
-    nullable: false
+    value:
+    nullable: true
 
   - handle: preserve_metadata
     description: "%preserve-original-metadata-during-conversion%"
     json_schema:
       type: boolean
-      default: true
-    nullable: false
+    value:
+    nullable: true
 
   - handle: fix_drm_protected
     description: "%attempt-to-process-drm-protected-files-may-fail-for-protected-co%"
     json_schema:
       type: boolean
-      default: false
-    nullable: false
+    value:
+    nullable: true
 
   - handle: clean_formatting
     description: "%clean-and-optimize-formatting-for-epub%"
     json_schema:
       type: boolean
-      default: true
-    nullable: false
+    value:
+    nullable: true
 
 outputs_def:
   - handle: output_file
     description: "Path to the converted EPUB file"
     json_schema:
       type: string
-
-  - handle: conversion_log
-    description: "Conversion process log and status"
-    json_schema:
-      type: string
+      ui:widget: file
 
 executor:
   name: python
